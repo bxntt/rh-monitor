@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>RH Agent Monitor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>⬡</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">⬡</span>
+      <div class="brand-text">
+        <h1>RH Agent Monitor</h1>
+        <span class="brand-sub">core · satellite · reddit-seed</span>
+      </div>
+    </div>
+    <div class="top-pills">
+      <span id="bot-pill" class="pill"><span class="dot"></span>…</span>
+      <span id="market-pill" class="pill">…</span>
+      <span id="tick-pill" class="pill dim">…</span>
+      <span id="refresh-pill" class="pill dim">connecting…</span>
+    </div>
+  </header>
+
+  <section id="stats" class="stat-row"></section>
+
+  <main class="grid">
+    <section class="col-main">
+      <div class="card chart-card">
+        <div class="card-head">
+          <h2>Equity Curve</h2>
+          <div class="seg" id="equity-range">
+            <button data-range="today" class="active">Today</button>
+            <button data-range="7d">7D</button>
+            <button data-range="all">All</button>
+          </div>
+        </div>
+        <div id="equity-chart" class="chart"></div>
+      </div>
+
+      <div class="card alloc-card">
+        <div class="card-head"><h2>Allocation</h2><span id="alloc-meta" class="head-meta"></span></div>
+        <div id="alloc"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Decision History</h2>
+          <div class="seg" id="feed-filter">
+            <button data-f="all" class="active">All</button>
+            <button data-f="trades">Trades</button>
+            <button data-f="discovery">Discovery</button>
+            <button data-f="problems">Problems</button>
+          </div>
+        </div>
+        <div id="feed"></div>
+      </div>
+    </section>
+
+    <section class="col-side">
+      <div class="card" id="alerts-card">
+        <div class="card-head"><h2>Alerts</h2></div>
+        <div id="alerts"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Positions</h2><span id="positions-meta" class="head-meta"></span></div>
+        <div id="positions"></div>
+      </div>
+
+      <div class="card" id="reddit-card" hidden>
+        <div class="card-head"><h2>Reddit Signals</h2><span id="reddit-meta" class="head-meta"></span></div>
+        <div id="reddit"></div>
+      </div>
+
+      <div class="card" id="btc-card" hidden>
+        <div class="card-head"><h2>BTC Sleeve</h2></div>
+        <div id="btc"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Funnel — Today</h2></div>
+        <div id="funnel"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Watchlist</h2><span id="watchlist-meta" class="head-meta"></span></div>
+        <div id="watchlist"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Trade Ledger</h2></div>
+        <div id="ledger"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <span id="datadir"></span>
+    <span class="sep">·</span>
+    <span>read-only — never writes <code>data/</code></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
