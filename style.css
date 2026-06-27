@@ -340,6 +340,17 @@ h2::before {
 .entry.open .caret { transform: rotate(90deg); color: var(--text-2); }
 .entry-body { display: none; padding: 4px 15px 15px; }
 .entry.open .entry-body { display: block; animation: fade .22s ease; }
+.feed-more {
+  display: block; width: 100%; margin-top: 2px;
+  background: var(--panel-2); color: var(--text-2);
+  border: 1px dashed var(--border); border-radius: 12px;
+  font: 600 11.5px var(--sans); letter-spacing: .3px; padding: 11px; cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.feed-more:hover {
+  color: #fff; background: var(--panel-3);
+  border-color: color-mix(in srgb, var(--blue) 45%, var(--border));
+}
 @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 .kv { margin-top: 10px; }
 .kv .k { font: 600 9.5px var(--sans); text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }

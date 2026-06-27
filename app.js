@@ -10,6 +10,7 @@ const $ = (id) => document.getElementById(id);
 let state = null;
 let equityRange = "today";
 let feedFilter = "all";
+let feedShowAll = false; // when false, the feed shows only the past 5 trading days
 const openEntries = new Set(); // journal ts values the user has expanded
 
 // ── time helpers (everything displayed in ET, the bot's clock) ──────────────
@@ -292,12 +293,26 @@ function inFilter(group) {
   return true;
 }
 
+// The 5th-most-recent ET day present in the journal. Entries on/after it make up
+// the "past 5 trading days" the feed shows by default. Days are derived from the
+// data itself, so weekends/holidays never eat into the window. Null when there
+// aren't more than that many days (nothing to collapse).
+const FEED_RECENT_DAYS = 5;
+function recentDayCutoff(n = FEED_RECENT_DAYS) {
+  const days = [...new Set(state.journal.map((e) => etDayKey(e.ts)))].sort();
+  return days.length > n ? days[days.length - n] : null;
+}
+
 function renderFeed() {
   const feed = $("feed");
   const entries = [...state.journal].reverse().filter((e) => inFilter(entryMeta(e).group));
   if (!entries.length) { feed.innerHTML = `<div class="empty">Nothing to show for this filter.</div>`; return; }
 
-  feed.innerHTML = entries.map((e) => {
+  const cutoff = recentDayCutoff();
+  const shown = feedShowAll || !cutoff ? entries : entries.filter((e) => etDayKey(e.ts) >= cutoff);
+  const hidden = entries.length - shown.length;
+
+  feed.innerHTML = shown.map((e) => {
     const m = entryMeta(e);
     const key = esc(e.ts);
     const badge = `<span class="badge ${m.badge.replace("?", "")}">${m.icon ? m.icon + " " : ""}${esc(m.badge)}</span>`;
@@ -315,7 +330,9 @@ function renderFeed() {
         </div>
         <div class="entry-body">${body}</div>
       </div>`;
-  }).join("");
+  }).join("") + (hidden > 0
+    ? `<button type="button" class="feed-more" onclick="showMoreFeed()">See more — ${hidden} older ${hidden === 1 ? "entry" : "entries"}</button>`
+    : "");
 }
 
 function kv(k, v, mono = false) {
@@ -390,6 +407,8 @@ window.toggleEntry = (key) => {
   if (openEntries.has(key)) openEntries.delete(key); else openEntries.add(key);
   document.querySelector(`.entry[data-key="${CSS.escape(key)}"]`)?.classList.toggle("open");
 };
+
+window.showMoreFeed = () => { feedShowAll = true; renderFeed(); };
 
 // ── alerts (last 24h problems) ──────────────────────────────────────────────
 function renderAlerts() {
@@ -545,6 +564,7 @@ $("equity-range").addEventListener("click", (ev) => {
 $("feed-filter").addEventListener("click", (ev) => {
   const b = ev.target.closest("button"); if (!b) return;
   feedFilter = b.dataset.f;
+  feedShowAll = false;
   for (const x of $("feed-filter").children) x.classList.toggle("active", x === b);
   if (state) renderFeed();
 });
