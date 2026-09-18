@@ -276,6 +276,7 @@ function entryMeta(e) {
   if (t === "gate_block")            return { group: "trade",   rail: "var(--orange)", badge: "GATE",      icon: "", title: e.ticker, gist: e.reason };
   if (t === "confirmation")          return { group: "trade",   rail: "var(--blue)",   badge: "CONFIRM",   icon: "", title: e.ticker, gist: `${e.agree ? "✓ agree" : "✗ disagree"}${e.verdict ? " · " + e.verdict : ""}` };
   if (t === "placement")             return { group: "trade",   rail: "var(--green)",  badge: "PLACED",    icon: "", title: e.ticker, gist: e.filled ? `filled ${num(e.fill_qty)} @ ${num(e.fill_price, 2)}` : "order sent" };
+  if (t === "fill_reconcile")        return { group: "trade",   rail: e.action === "amend" ? "var(--blue)" : e.action === "drift" || e.action === "unfilled" ? "var(--yellow)" : "var(--border)", badge: "FILL✓",    icon: "", title: e.ticker, gist: e.action === "amend" ? `broker fill ${num(e.broker_qty)} @ ${num(e.broker_price, 2)} (recorded ${num(e.recorded_price, 2)})` : `${e.state} · ${e.reason ?? ""}` };
   if (t === "account_drift")         return { group: "problem", rail: "var(--yellow)", badge: "DRIFT",     icon: "", title: "account id drift", gist: `${e.reported} vs cached ${e.cached}` };
   if (e.decision) {
     const d = e.decision;
